@@ -1,0 +1,15 @@
+<view>
+	<view class="item_list">
+	    <view class="item_box" wx:for="{{categoryList}}" wx:key="{{index}}">
+	        <wux-image mode="aspectFill" width="100%" height="100px" wux-class="image" src="{{item.category_thumbnail_image}}">
+	            <image src="https://loading.io/spinners/spinner/index.ajax-spinner-preloader.svg" slot="loading" />
+              	<view class="empty" slot="empty">暂无图片</view>
+	        </wux-image>
+          <view class='middle_box'>
+            <text>{{item.name}}</text>
+            <wux-tag color="magenta">{{item.description}}</wux-tag>
+          </view>
+          <text class='text'>{{item.description}}</text>
+	    </view>
+	</view>
+</view>
