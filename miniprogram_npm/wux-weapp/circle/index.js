@@ -1,15 +1,21 @@
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+
 const toAngle = (a) => a / 180 * Math.PI
 const percent = (a) => toAngle(a / 100 * 360)
-const easeInOutCubic = (a, b ,c, d) => {
+const easeInOutCubic = (a, b, c, d) => {
     a /= d / 2
     if (a < 1) return c / 2 * a * a * a + b
     a -= 2
     return c / 2 * (a * a * a + 2) + b
 }
 
-Component({
-    externalClasses: ['wux-class'],
+baseComponent({
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-circle',
+        },
         percent: {
             type: Number,
             value: 0,
@@ -68,6 +74,18 @@ Component({
         endAngle: 0,
         currentAngle: 0,
     },
+    computed: {
+        classes() {
+            const { prefixCls } = this.data
+            const wrap = classNames(prefixCls)
+            const inner = `${prefixCls}__inner`
+
+            return {
+                wrap,
+                inner,
+            }
+        },
+    },
     methods: {
         /**
          * 更新样式
@@ -87,11 +105,11 @@ Component({
             const now = Date.now()
             const decrease = this.data.currentAngle > endAngle
             const startAngle = !decrease ? this.data.currentAngle : this.data.endAngle
-            
+
             this.cancelNextCallback()
             this.clearTimer()
 
-            this.safeSetData({ startAngle, endAngle}, () => {
+            this.safeSetData({ startAngle, endAngle }, () => {
                 this.animate(now, now, decrease)
             })
         },
@@ -168,52 +186,6 @@ Component({
                 this.timer = null
             }
         },
-        /**
-         * safeSetData
-         * @param {Object} nextData 数据对象
-         * @param {Function} callback 回调函数
-         */
-        safeSetData(nextData, callback) {
-            callback = this.setNextCallback(callback)
-
-            this.setData(nextData, () => {
-                callback()
-            })
-        },
-        /**
-         * 设置下一回调函数
-         * @param {Function} callback 回调函数
-         */
-        setNextCallback(callback) {
-            let active = true
-
-            this.nextCallback = (event) => {
-                if (active) {
-                    active = false
-                    this.nextCallback = null
-
-                    callback.call(this, event)
-                }
-            }
-
-            this.nextCallback.cancel = () => {
-                active = false
-            }
-
-            return this.nextCallback
-        },
-        /**
-         * 取消下一回调函数
-         */
-        cancelNextCallback() {
-            if (this.nextCallback !== null) {
-                this.nextCallback.cancel()
-                this.nextCallback = null
-            }
-        },
-    },
-    created() {
-        this.nextCallback = null
     },
     attached() {
         this.updateStyle()
@@ -223,7 +195,6 @@ Component({
     },
     detached() {
         this.ctx = null
-        this.cancelNextCallback()
         this.clearTimer()
     },
 })

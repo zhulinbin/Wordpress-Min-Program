@@ -1,9 +1,13 @@
-Component({
-	externalClasses: ['wux-class'],
-    options: {
-        multipleSlots: true,
-    },
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+import styleToCssString from '../helpers/styleToCssString'
+
+baseComponent({
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-textarea',
+        },
         label: {
             type: String,
             value: '',
@@ -34,8 +38,13 @@ Component({
             value: '',
         },
         placeholderStyle: {
-            type: String,
+            type: [String, Object],
             value: '',
+            observer(newVal) {
+                this.setData({
+                    extStyle: styleToCssString(newVal),
+                })
+            },
         },
         placeholderClass: {
             type: String,
@@ -60,11 +69,6 @@ Component({
         focus: {
             type: Boolean,
             value: false,
-            observer(newVal) {
-                this.setData({
-                    inputFocus: newVal,
-                })
-            },
         },
         cursor: {
             type: Number,
@@ -109,17 +113,49 @@ Component({
         inputFocus: false,
         inputRows: 1,
         inputHeight: '',
+        extStyle: '',
+    },
+    computed: {
+        classes() {
+            const { prefixCls, disabled, inputFocus, error: hasError, hasCount } = this.data
+            const wrap = classNames(prefixCls, {
+                [`${prefixCls}--focus`]: inputFocus,
+                [`${prefixCls}--disabled`]: disabled,
+                [`${prefixCls}--error`]: hasError,
+                [`${prefixCls}--has-count`]: hasCount,
+            })
+            const label = `${prefixCls}__label`
+            const control = `${prefixCls}__control`
+            const item = `${prefixCls}__item`
+            const clear = `${prefixCls}__clear`
+            const error = `${prefixCls}__error`
+            const extra = `${prefixCls}__extra`
+            const count = `${prefixCls}__count`
+            const current = `${prefixCls}__current`
+
+            return {
+                wrap,
+                label,
+                control,
+                item,
+                clear,
+                error,
+                extra,
+                count,
+                current,
+            }
+        },
     },
     methods: {
         updateHeight(val = this.data.rows) {
             // rows 取值为大于或等于 1 的正整数
             const rows = Math.max(1, parseInt(val))
-            const { inputRows } = this.data
+            const { prefixCls, inputRows } = this.data
 
             if (inputRows !== rows) {
                 wx
                     .createSelectorQuery()
-                    .in(this).select('.wux-textarea__item')
+                    .in(this).select(`.${prefixCls}__item`)
                     .boundingClientRect((rect) => {
                         if (rect) {
                             const lineHeight = inputRows > 1 ? rect.height / inputRows : rect.height
@@ -146,15 +182,11 @@ Component({
                 this.updated(e.detail.value)
             }
 
-            if (!this.data.inputFocus) {
-                this.setData({
-                    inputFocus: true,
-                })
-            }
-
             this.triggerEvent('change', e.detail)
         },
         onFocus(e) {
+            this.clearTimer()
+
             this.setData({
                 inputFocus: true,
             })
@@ -162,9 +194,7 @@ Component({
             this.triggerEvent('focus', e.detail)
         },
         onBlur(e) {
-            this.setData({
-                inputFocus: false,
-            })
+            this.setTimer()
 
             this.triggerEvent('blur', e.detail)
         },
@@ -176,7 +206,6 @@ Component({
 
             this.setData({
                 inputValue: controlled ? inputValue : '',
-                inputFocus: true,
             })
 
             this.triggerEvent('clear', { value: '' })
@@ -186,6 +215,21 @@ Component({
         },
         onLineChange(e) {
             this.triggerEvent('linechange', e.detail)
+        },
+        setTimer() {
+            this.clearTimer()
+
+            this.timeout = setTimeout(() => {
+                this.setData({
+                    inputFocus: false,
+                })
+            }, 200)
+        },
+        clearTimer() {
+            if (this.timeout) {
+                clearTimeout(this.timeout)
+                this.timeout = null
+            }
         },
     },
     attached() {

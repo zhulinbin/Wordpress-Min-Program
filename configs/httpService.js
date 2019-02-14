@@ -5,9 +5,7 @@ let fly = new Fly
 fly.interceptors.request.use((request) => {
   /* 给所有请求添加自定义header */
   // request.headers['xxx'] = 'xxx'
-  wx.showLoading({
-    title: '加载中',
-  })
+  wx.showLoading()
   return request
 })
  
@@ -15,6 +13,12 @@ fly.interceptors.request.use((request) => {
 fly.interceptors.response.use(
   (response) => {
     wx.hideLoading()
+    // 目前还不清楚所有的返回响应字段code所以暂时先不做错误提示
+    // if (response.code !== 2000) {
+    //   wx.showToast({
+    //     title: 'errorMsg'
+    //   })
+    // }
 
     return response.data
   },

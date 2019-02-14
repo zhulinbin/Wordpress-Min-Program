@@ -1,0 +1,6 @@
+<template name="footer--template">
+  <view class="footer_box">
+    <image src="../../assets/img/copyRight.png" />
+    竹林彬 www.jwdai.con.cn
+  </view>
+</template>

@@ -1,11 +1,25 @@
-Component({
-    externalClasses: ['wux-class'],
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+
+baseComponent({
     relations: {
         '../radio-group/index': {
             type: 'parent',
         },
     },
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-radio',
+        },
+        cellPrefixCls: {
+            type: String,
+            value: 'wux-cell',
+        },
+        selectablePrefixCls: {
+            type: String,
+            value: 'wux-selectable',
+        },
         thumb: {
             type: String,
             value: '',
@@ -43,6 +57,18 @@ Component({
     data: {
         index: 0,
         inputChecked: false,
+    },
+    computed: {
+        classes() {
+            const { prefixCls } = this.data
+            const cell = classNames(prefixCls)
+            const selectable = `${prefixCls}__selectable`
+
+            return {
+                cell,
+                selectable,
+            }
+        },
     },
     methods: {
         radioChange(e) {

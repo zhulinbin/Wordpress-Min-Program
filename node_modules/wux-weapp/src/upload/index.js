@@ -1,6 +1,12 @@
-Component({
-    externalClasses: ['wux-class'],
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+
+baseComponent({
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-upload',
+        },
         max: {
             type: Number,
             value: -1,
@@ -10,6 +16,22 @@ Component({
             type: Number,
             value: 9,
             observer: 'updated',
+        },
+        defaultFileType: {
+            type: String,
+            value: 'image',
+        },
+        compressed: {
+            type: Boolean,
+            value: true,
+        },
+        maxDuration: {
+            type: Number,
+            value: 60,
+        },
+        camera: {
+            type: String,
+            value: 'back',
         },
         sizeType: {
             type: Array,
@@ -83,9 +105,35 @@ Component({
         uploadMax: -1,
         uploadCount: 9,
         uploadFileList: [],
+        isVideo: false,
+    },
+    computed: {
+        classes() {
+            const { prefixCls, disabled, listType } = this.data
+            const wrap = classNames(prefixCls, {
+                [`${prefixCls}--${listType}`]: listType,
+                [`${prefixCls}--disabled`]: disabled,
+            })
+            const files = `${prefixCls}__files`
+            const file = `${prefixCls}__file`
+            const thumb = `${prefixCls}__thumb`
+            const remove = `${prefixCls}__remove`
+            const select = `${prefixCls}__select`
+            const button = `${prefixCls}__button`
+
+            return {
+                wrap,
+                files,
+                file,
+                thumb,
+                remove,
+                select,
+                button,
+            }
+        },
     },
     methods: {
-        /** 
+        /**
          * 计算最多可以选择的图片张数
          */
         updated() {
@@ -130,9 +178,14 @@ Component({
                 uploaded,
                 disabled,
                 uploadFileList: fileList,
+                isVideo,
+                compressed,
+                maxDuration,
+                camera,
             } = this.data
             const { uploadCount: count } = this.calcValue(uploadCount, uploadMax - fileList.length)
             const success = (res) => {
+                res.tempFilePaths = res.tempFilePaths || [res.tempFilePath]
                 this.tempFilePaths = res.tempFilePaths.map((item) => ({ url: item, uid: this.getUid() }))
                 this.triggerEvent('before', {...res, fileList })
 
@@ -145,6 +198,20 @@ Component({
             // disabled
             if (disabled) return
 
+            // choose video
+            if (isVideo) {
+                wx.chooseVideo({
+                    sourceType,
+                    compressed,
+                    maxDuration,
+                    camera,
+                    success,
+                })
+
+                return
+            }
+
+            // choose image
             wx.chooseImage({
                 count,
                 sizeType,
@@ -368,10 +435,11 @@ Component({
      * 组件生命周期函数，在组件实例进入页面节点树时执
      */
     attached() {
-        const { defaultFileList, fileList, controlled } = this.data
+        const { defaultFileType, defaultFileList, fileList, controlled } = this.data
         const uploadFileList = controlled ? fileList : defaultFileList
+        const isVideo = defaultFileType === 'video'
 
-        this.setData({ uploadFileList })
+        this.setData({ uploadFileList, isVideo })
     },
     /**
      * 组件生命周期函数，在组件实例被从页面节点树移除时执行

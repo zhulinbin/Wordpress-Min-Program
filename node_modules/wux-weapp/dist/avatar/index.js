@@ -1,6 +1,13 @@
-Component({
-    externalClasses: ['wux-class'],
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+import styleToCssString from '../helpers/styleToCssString'
+
+baseComponent({
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-avatar',
+        },
         shape: {
             type: String,
             value: 'circle',
@@ -14,8 +21,13 @@ Component({
             value: '',
         },
         bodyStyle: {
-            type: String,
+            type: [String, Object],
             value: '',
+            observer(newVal) {
+                this.setData({
+                    extStyle: styleToCssString(newVal),
+                })
+            },
         },
         scale: {
             type: Boolean,
@@ -23,17 +35,33 @@ Component({
         },
     },
     data: {
+        extStyle: '',
         childrenStyle: '',
+    },
+    computed: {
+        classes() {
+            const { prefixCls, shape, size, src } = this.data
+            const wrap = classNames(prefixCls, {
+                [`${prefixCls}--${shape}`]: shape,
+                [`${prefixCls}--${size}`]: size,
+                [`${prefixCls}--thumb`]: src,
+            })
+            const string = `${prefixCls}__string`
+
+            return {
+                wrap,
+                string,
+            }
+        },
     },
     methods: {
         setScale() {
+            const { prefixCls } = this.data
             const query = wx.createSelectorQuery().in(this)
-            query.select('.wux-avatar').boundingClientRect()
-            query.select('.wux-avatar__string').boundingClientRect()
+            query.select(`.${prefixCls}`).boundingClientRect()
+            query.select(`.${prefixCls}__string`).boundingClientRect()
             query.exec((rects) => {
-                if (rects.filter((n) => !n).length) {
-                    return false
-                }
+                if (rects.filter((n) => !n).length) return
 
                 const [parent, child] = rects
                 const offset = parent.width - 8 < child.width

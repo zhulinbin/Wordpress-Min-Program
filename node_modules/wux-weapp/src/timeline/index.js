@@ -1,20 +1,20 @@
-Component({
-	externalClasses: ['wux-class'],
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+
+baseComponent({
     relations: {
         '../timeline-item/index': {
             type: 'child',
-            linked() {
-                this.updateIsLastElement()
-            },
-            linkChanged() {
-                this.updateIsLastElement()
-            },
-            unlinked() {
-                this.updateIsLastElement()
+            observer() {
+                this.debounce(this.updateIsLastElement)
             },
         },
     },
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-timeline',
+        },
         pending: {
             type: Boolean,
             value: false,

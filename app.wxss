@@ -1,0 +1,10 @@
+view {
+  box-sizing: border-box;
+  flex-wrap: wrap;
+}
+
+/* 由于articleList是个自定义组件，目前好像式样无法在自己的css里进行覆盖，所以曲线救国暂且写在全局里，后续看是否有办法覆盖 */
+.article_box .item.skeleton .wux-skeleton-paragraph__row {
+  height: 200rpx;
+  width: 100%;
+}

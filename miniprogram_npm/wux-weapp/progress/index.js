@@ -1,3 +1,6 @@
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+import styleToCssString from '../helpers/styleToCssString'
 import { colors } from '../helpers/colors'
 
 const defaultColors = {
@@ -7,9 +10,12 @@ const defaultColors = {
     success: colors.balanced,
 }
 
-Component({
-    externalClasses: ['wux-class'],
+baseComponent({
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-progress',
+        },
         percent: {
             type: Number,
             value: 0,
@@ -39,8 +45,13 @@ Component({
             value: 'round',
         },
         barStyle: {
-            type: String,
+            type: [String, Object],
             value: '',
+            observer(newVal) {
+                this.setData({
+                    extStyle: styleToCssString(newVal),
+                })
+            },
         },
         showInfo: {
             type: Boolean,
@@ -50,6 +61,28 @@ Component({
     data: {
         width: 0,
         style: '',
+        extStyle: '',
+    },
+    computed: {
+        classes() {
+            const { prefixCls, shape, status } = this.data
+            const wrap = classNames(prefixCls, {
+                [`${prefixCls}--${shape}`]: shape,
+                [`${prefixCls}--${status}`]: status,
+            })
+            const outer = `${prefixCls}__outer`
+            const inner = `${prefixCls}__inner`
+            const bar = `${prefixCls}__bar`
+            const text = `${prefixCls}__text`
+
+            return {
+                wrap,
+                outer,
+                inner,
+                bar,
+                text,
+            }
+        },
     },
     methods: {
         updateStyle(opts = {}) {

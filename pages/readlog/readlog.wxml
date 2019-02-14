@@ -1,6 +1,0 @@
-<import src="../../static/lib/wxParse/wxParse.wxml" />
-
-<view>
-<template is="wxParse" data="{{wxParseData:article.nodes}}" />
-</view>
-<wux-button block type="energized">readlog button</wux-button>

@@ -1,0 +1,68 @@
+@import "../../templates/footer/footer.wxss";
+
+.video_wrapper movable-view {
+  position: fixed;
+  z-index: 11;
+}
+.video_wrapper movable-view > image {
+  width: 128rpx;
+  height: 128rpx;
+}
+
+.video_wrapper  {
+  position: absolute;
+  height: calc(100% - 20rpx);
+  width: 100%;
+}
+
+.item_box {
+  border-bottom: 20rpx solid rgba(204, 204, 204, 0.3);
+}
+
+.item_box > video {
+  height: 400rpx;
+  width: 100%;
+}
+
+.item_box > view {
+  padding: 20rpx;
+}
+
+.item_box > view .title {
+  padding-bottom: 15rpx;
+  font-weight: bold;
+  font-size: 32rpx;
+}
+
+.item_box > view .content {
+  display: flex;
+  align-items: center;
+  font-size: 26rpx;
+}
+
+.item_box > view .content > image {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50px;
+  margin-right: 20rpx;
+}
+
+/* overwrite */
+.item_box.skeleton {
+  border-color: transparent;
+}
+.wux-skeleton-paragraph .wux-skeleton-paragraph__row:nth-child(4n+1) {
+  width: 100%;
+  height: 400rpx;
+}
+.wux-skeleton-paragraph__row:nth-child(4n+2) {
+  margin-top: 16rpx;
+  height: 40rpx;
+}
+.wux-skeleton-paragraph__row:nth-child(4n+3) {
+  margin-top: 8rpx;
+  height: 54rpx;
+}
+.wux-skeleton {
+  padding-bottom: 20rpx;
+}

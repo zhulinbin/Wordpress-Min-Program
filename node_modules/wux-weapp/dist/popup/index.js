@@ -1,13 +1,19 @@
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+import styleToCssString from '../helpers/styleToCssString'
 import { $wuxBackdrop } from '../index'
 
-const prefixCls = 'wux-animate'
-
-Component({
-    externalClasses: ['wux-class'],
-    options: {
-        multipleSlots: true,
-    },
+baseComponent({
+    externalClasses: ['wux-content-class', 'wux-header-class', 'wux-body-class', 'wux-footer-class', 'wux-close-class'],
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-popup',
+        },
+        animationPrefixCls: {
+            type: String,
+            value: 'wux-animate',
+        },
         title: {
             type: String,
             value: '',
@@ -26,8 +32,13 @@ Component({
             observer: 'getTransitionName',
         },
         wrapStyle: {
-            type: String,
+            type: [String, Object],
             value: '',
+            observer(newVal) {
+                this.setData({
+                    extStyle: styleToCssString(newVal),
+                })
+            },
         },
         closable: {
             type: Boolean,
@@ -54,6 +65,35 @@ Component({
     data: {
         transitionName: '',
         popupVisible: false,
+        extStyle: '',
+    },
+    computed: {
+        classes() {
+            const { prefixCls, position } = this.data
+            const wrap = classNames(`${prefixCls}-position`, {
+                [`${prefixCls}-position--${position}`]: position,
+            })
+            const content = `${prefixCls}__content`
+            const hd = `${prefixCls}__hd`
+            const title = `${prefixCls}__title`
+            const bd = `${prefixCls}__bd`
+            const ft = `${prefixCls}__ft`
+            const extra = `${prefixCls}__extra`
+            const close = `${prefixCls}__close`
+            const x = `${prefixCls}__close-x`
+
+            return {
+                wrap,
+                content,
+                hd,
+                title,
+                bd,
+                ft,
+                extra,
+                close,
+                x,
+            }
+        },
     },
     methods: {
         /**
@@ -80,23 +120,24 @@ Component({
          * 获取过渡的类名
          */
         getTransitionName(value = this.data.position) {
+            const { animationPrefixCls } = this.data
             let transitionName = ''
 
             switch (value) {
                 case 'top':
-                    transitionName = `${prefixCls}--slideInDown`
+                    transitionName = `${animationPrefixCls}--slideInDown`
                     break
                 case 'right':
-                    transitionName = `${prefixCls}--slideInRight`
+                    transitionName = `${animationPrefixCls}--slideInRight`
                     break
                 case 'bottom':
-                    transitionName = `${prefixCls}--slideInUp`
+                    transitionName = `${animationPrefixCls}--slideInUp`
                     break
                 case 'left':
-                    transitionName = `${prefixCls}--slideInLeft`
+                    transitionName = `${animationPrefixCls}--slideInLeft`
                     break
                 default:
-                    transitionName = `${prefixCls}--fadeIn`
+                    transitionName = `${animationPrefixCls}--fadeIn`
                     break
             }
 

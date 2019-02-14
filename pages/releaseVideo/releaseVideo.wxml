@@ -1,0 +1,15 @@
+<view class="release_video_box">
+  <image src="{{headerImg}}" mode="aspectFill" lazy-load="true" />
+  <view>
+    <wux-input class="input_box" maxlength="{{250}}" placeholder-style="font-size: 12px" value="{{videoUrl}}" bindclear="doClear" bindchange="onInputChange" placeholder="请输入视频链接" clear  />
+    <view class="tips_box">
+      <view>
+        <wux-icon type="ios-alert" size="20" color="#cccccc" /><text>友情提示</text>
+      </view>
+      <text>输入有效的链接后,经过管理员的审核就可在视频列表看到哦</text>
+    </view>
+    <wux-button type="balanced" bindtap="doReleaseVideo">
+      投稿
+    </wux-button>
+  </view>
+</view>

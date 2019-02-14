@@ -1,0 +1,12 @@
+.footer_box {
+  color: #cccccc;
+  font-size: 24rpx;
+  text-align: center;
+  padding: 30rpx 0;
+}
+
+.footer_box > image {
+ width: 26rpx;
+ height: 26rpx;
+ vertical-align: -4.5rpx;
+}

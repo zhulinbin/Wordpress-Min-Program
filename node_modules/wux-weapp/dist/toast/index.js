@@ -1,14 +1,17 @@
-import baseBehavior from '../helpers/baseBehavior'
-import mergeOptionsToData from '../helpers/mergeOptionsToData'
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
 import { $wuxBackdrop } from '../index'
 
 const defaults = {
+    prefixCls: 'wux-toast',
+    classNames: 'wux-animate--fadeIn',
     type: 'default',
     duration: 1500,
     color: '#fff',
     text: '',
     icon: '',
     mask: true,
+    transparent: true,
     success() {},
 }
 
@@ -22,15 +25,38 @@ const iconTypes = {
 
 let _toast = null
 
-Component({
-    behaviors: [baseBehavior],
-    externalClasses: ['wux-class'],
-    data: mergeOptionsToData(defaults),
+baseComponent({
+    useFunc: true,
+    data: defaults,
+    computed: {
+        classes() {
+            const { prefixCls, icon: hasIcon } = this.data
+            const wrap = classNames(prefixCls)
+            const content = classNames(`${prefixCls}__content`, {
+                [`${prefixCls}__content--has-icon`]: hasIcon,
+            })
+            const icon = `${prefixCls}__icon`
+            const text = `${prefixCls}__text`
+
+            return {
+                wrap,
+                content,
+                icon,
+                text,
+            }
+        },
+    },
     methods: {
         /**
          * 隐藏
          */
         hide() {
+            if (this.removed) return false
+            this.removed = true
+            if (_toast) {
+                clearTimeout(_toast.timeout)
+                _toast = null
+            }
             this.$$setData({ in: false })
             this.$wuxBackdrop && this.$wuxBackdrop.release()
             if (typeof this.fns.success === 'function') {
@@ -57,6 +83,7 @@ Component({
 
                 options.icon = iconType
 
+                this.removed = false
                 this.$$setData({ in: true, ...options })
                 this.$wuxBackdrop && this.$wuxBackdrop.retain()
 

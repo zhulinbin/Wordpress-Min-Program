@@ -1,0 +1,27 @@
+<view class='article_box'>
+  <block wx:if="{{!isLoadingArticle}}">
+    <block wx:if="{{articleList.length > 0}}">
+      <view class='item' wx:for="{{articleList}}" wx:key="{{index}}" bindtap="goDetailPage" data-id="{{item.id}}">
+        <wux-image mode="aspectFill" width="100%" height="100%" src="{{item.post_medium_image}}">
+          <image src="{{loadingIcon}}" slot="loading" />
+          <view class="empty" slot="empty">暂无图片</view>
+        </wux-image>
+        <view class="text_box">
+          <text>{{item.title.rendered}}</text>
+          <view>
+            <text>{{item.date}}</text>
+            <text>浏览 {{item.pageviews}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
+    <view wx:else> <wux-divider text="暂无数据" /></view>
+  </block>
+  <block wx:else>
+    <view class='item skeleton' wx:for="{{8}}" wx:key="index">
+      <wux-skeleton>
+        <wux-skeleton-paragraph rows="1" />
+      </wux-skeleton>
+    </view>
+  </block>
+</view>

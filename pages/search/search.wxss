@@ -1,0 +1,117 @@
+@import "../../templates/footer/footer.wxss";
+
+.authorize_modal {
+  background: #ffffff;
+  position: fixed;
+  padding: 0 30rpx;
+  box-sizing: border-box;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999999999;
+}
+
+.authorize_modal .header {
+  margin: 90rpx 25rpx;
+  padding: 50rpx 0;
+  box-sizing: border-box;
+  border-bottom: 1px solid #ccc;
+  text-align: center;
+}
+
+.authorize_modal .header image {
+  width: 250rpx;
+  height: 250rpx;
+  border-radius: 50%;
+}
+
+.authorize_modal .content {
+  padding-left: 50rpx;
+  margin-bottom: 150rpx;
+}
+
+.authorize_modal .content > text {
+  display: block;
+  color: #9d9d9d;
+  margin-top: 40rpx;
+}
+
+.swiper_box {
+  border-top: 37px solid #28a54c;
+}
+
+.article_box {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10rpx;
+}
+
+.article_box .item {
+  position: relative;
+  height: 200rpx;
+  width: calc(50% - 5px);
+  margin-bottom: 15px;
+}
+
+.article_box .item.skeleton .wux-skeleton-paragraph__row {
+  height: 200rpx;
+  width: 100%;
+}
+
+.article_box .item > image {
+  width: 100%;
+  height: 100%;
+}
+
+.article_box .item .empty {
+	text-align: center;
+  background-color: #cccccc;
+  color: aliceblue;
+	height: 100%;
+  width: 100%;
+  line-height: 200rpx;
+  font-size: 28rpx;
+}
+
+.article_box .item .text_box {
+  bottom: 0;
+  left: 0;
+  padding: 0 0 10rpx 10rpx;
+  position: absolute;
+  width: 100%;
+  color: #ffffff;
+  background: rgba(204, 204, 204, 0.5);
+  z-index: 22222;
+}
+
+.article_box .item .text_box > text {
+  font-size: 26rpx;
+  font-weight: bold;
+}
+
+.article_box .item .text_box > view > text {
+  font-size: 24rpx;
+}
+.article_box .item .text_box > view > text:nth-child(1) {
+  margin-right: 20rpx;
+}
+
+/* overwrite */
+.wux-tabs {
+  background: #28a54c !important;
+  position: fixed !important;
+  z-index: 99999999;
+  top: 0;
+  left: 0;
+}
+.wux-tabs__tab {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #ffffff !important;
+}
+
+.wux-tabs__tab-bar {
+  background: #ffffff !important;
+}

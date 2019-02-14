@@ -1,11 +1,17 @@
-Component({
-    externalClasses: ['wux-class'],
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+
+baseComponent({
     relations: {
         '../accordion-group/index': {
             type: 'parent',
         },
     },
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-accordion',
+        },
         key: {
             type: String,
             value: '',
@@ -34,6 +40,31 @@ Component({
     data: {
         current: false,
         index: '0',
+    },
+    computed: {
+        classes() {
+            const { prefixCls, current, disabled } = this.data
+            const wrap = classNames(prefixCls, {
+                [`${prefixCls}--current`]: current,
+                [`${prefixCls}--disabled`]: disabled,
+            })
+            const hd = `${prefixCls}__hd`
+            const thumb = `${prefixCls}__thumb`
+            const title = `${prefixCls}__title`
+            const arrow = `${prefixCls}__arrow`
+            const bd = `${prefixCls}__bd`
+            const content = `${prefixCls}__content`
+
+            return {
+                wrap,
+                hd,
+                thumb,
+                title,
+                arrow,
+                bd,
+                content,
+            }
+        },
     },
     methods: {
         changeCurrent(current, index) {

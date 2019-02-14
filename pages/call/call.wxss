@@ -1,0 +1,16 @@
+.wux-cell-group__hd.wux-cell-group__hd {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.wux-button.wux-button--stable {
+  background: transparent !important;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border: none;
+}
+
+.wux-button.wux-button--stable.wux-button--hover {
+  background: transparent !important;
+}

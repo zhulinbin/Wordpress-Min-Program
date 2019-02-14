@@ -13,9 +13,9 @@
 		"autoAudits": false
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.2.1",
+	"libVersion": "2.2.3",
 	"appid": "wx2163edffc6619882",
-	"projectname": "wordpress",
+	"projectname": "%E6%B8%B8%E5%88%B0%E8%85%B0%E7%96%BC",
 	"condition": {
 		"search": {
 			"current": -1,

@@ -1,7 +1,9 @@
-import baseBehavior from '../helpers/baseBehavior'
-import mergeOptionsToData from '../helpers/mergeOptionsToData'
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
 
 const defaults = {
+    prefixCls: 'wux-toptips',
+    classNames: 'wux-animate--slideInDown',
     icon: 'cancel',
     hidden: false,
     text: '',
@@ -11,15 +13,37 @@ const defaults = {
 
 let _toptips = null
 
-Component({
-    behaviors: [baseBehavior],
-    externalClasses: ['wux-class'],
-    data: mergeOptionsToData(defaults),
+baseComponent({
+    useFunc: true,
+    data: defaults,
+    computed: {
+        classes() {
+            const { prefixCls } = this.data
+            const ico = this.data.icon ? this.data.icon : 'cancel'
+            const wrap = classNames(prefixCls)
+            const content = classNames(`${prefixCls}__content`, {
+                [`${prefixCls}__content--${ico}`]: ico,
+            })
+            const icon = `${prefixCls}__icon`
+
+            return {
+                wrap,
+                content,
+                icon,
+            }
+        },
+    },
     methods: {
         /**
          * 隐藏
          */
         hide() {
+            if (this.removed) return false
+            this.removed = true
+            if (_toptips) {
+                clearTimeout(_toptips.timeout)
+                _toptips = null
+            }
             this.$$setData({ in: false })
             if (typeof this.fns.success === 'function') {
                 this.fns.success()
@@ -35,6 +59,7 @@ Component({
                     this.hide()
                     return resolve(true)
                 }
+                this.removed = false
                 this.$$setData({ in: true, ...options })
 
                 if (_toptips) {

@@ -1,51 +1,6 @@
 <import src="../../static/lib/wxParse/wxParse.wxml" />
-<!-- <view>
-<template is="wxParse" data="{{wxParseData:article.nodes}}" />
-</view> -->
-<view>
-  <swiper 
-    indicator-dots="true"
-    autoplay="true" 
-    interval="1000">
-    <block wx:for="{{swipeImgList}}" wx:key="{{index}}">
-      <swiper-item>
-        <image src="{{item.post_medium_image}}" />
-      </swiper-item>
-    </block>
-  </swiper>
-  <wux-search-bar clear controlled placeholder="搜索你感兴趣的内容..." />
-</view>
 
-<view class='middle_box'>
-  <view class='nav_box'>
-    <view class='item' wx:for="{{navList}}" wx:key="{{index}}" style='background-image: url({{item.img}})'>
-      <text>{{item.text}}</text>
-    </view>
-  </view>
-</view>
-<view class='article_box'>
-  <view class='item' wx:for="{{articleList}}" wx:key="{{index}}">
-    <view style='background-image: url({{item.post_medium_image}})'></view>
-    <view>
-      <text>{{item.title.rendered}}</text>
-      <view class='action_box'>
-        <view>
-          <image src="../../assets/img/calendar.png"></image>
-          <text>{{item.date}}</text>
-        </view>
-        <view>
-          <image src="../../assets/img/comments.png"></image>
-          <text>{{item.total_comments}}</text>
-        </view>
-        <view>
-          <image src="../../assets/img/pageviews.png"></image>
-          <text>{{item.pageviews}}</text>
-        </view>
-        <view>
-          <image src="../../assets/img/home-like.png"></image>
-          <text>{{item.like_count}}</text>
-        </view>
-      </view>
-    </view>
-  </view>
+<view class="detail_box">
+  <template wx:if="{{content !== ''}}" is="wxParse" data="{{wxParseData:articleDetail.nodes}}" />
+  <view wx:else> <wux-divider text="暂无数据" /></view>
 </view>

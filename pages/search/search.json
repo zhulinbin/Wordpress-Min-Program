@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "搜索文章",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "article-list-component": "../../components/articleList/index"
+  }
+}

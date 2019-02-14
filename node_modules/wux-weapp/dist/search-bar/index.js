@@ -1,6 +1,13 @@
-Component({
-	externalClasses: ['wux-class'],
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+import styleToCssString from '../helpers/styleToCssString'
+
+baseComponent({
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-search-bar',
+        },
         defaultValue: {
             type: String,
             value: '',
@@ -19,8 +26,13 @@ Component({
             value: '搜索',
         },
         placeholderStyle: {
-            type: String,
+            type: [String, Object],
             value: '',
+            observer(newVal) {
+                this.setData({
+                    extStyle: styleToCssString(newVal),
+                })
+            },
         },
         placeholderClass: {
             type: String,
@@ -91,6 +103,38 @@ Component({
     data: {
         inputValue: '',
         inputFocus: false,
+        extStyle: '',
+    },
+    computed: {
+        classes() {
+            const { prefixCls, disabled, inputFocus } = this.data
+            const wrap = classNames(prefixCls, {
+                [`${prefixCls}--focus`]: inputFocus,
+                [`${prefixCls}--disabled`]: disabled,
+            })
+            const form = `${prefixCls}__form`
+            const box = `${prefixCls}__box`
+            const search = `${prefixCls}__search`
+            const input = `${prefixCls}__input`
+            const clear = `${prefixCls}__clear`
+            const label = `${prefixCls}__label`
+            const icon = `${prefixCls}__icon`
+            const text = `${prefixCls}__text`
+            const cancel = `${prefixCls}__cancel`
+
+            return {
+                wrap,
+                form,
+                box,
+                search,
+                input,
+                clear,
+                label,
+                icon,
+                text,
+                cancel,
+            }
+        },
     },
     methods: {
         updated(inputValue) {

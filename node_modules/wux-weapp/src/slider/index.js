@@ -1,3 +1,6 @@
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+import styleToCssString from '../helpers/styleToCssString'
 import { getTouchPoints, getPointsNumber } from '../helpers/gestures'
 
 /**
@@ -17,9 +20,12 @@ const checkValuePrecision = (val, step, min) => {
     return parseFloat(closestStep.toFixed(precision))
 }
 
-Component({
-	externalClasses: ['wux-class'],
+baseComponent({
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-slider',
+        },
         min: {
             type: Number,
             value: 0,
@@ -65,29 +71,83 @@ Component({
             value: false,
         },
         markStyle: {
-            type: [String, Array],
+            type: [String, Object, Array],
             value: '',
+            observer(newVal) {
+                this.setData({
+                    extMarkStyle: Array.isArray(newVal) ? newVal.map((n) => styleToCssString(n)) : styleToCssString(newVal),
+                })
+            },
         },
         handleStyle: {
-            type: [String, Array],
+            type: [String, Object, Array],
             value: '',
+            observer(newVal) {
+                this.setData({
+                    extHandleStyle: Array.isArray(newVal) ? newVal.map((n) => styleToCssString(n)) : styleToCssString(newVal),
+                })
+            },
         },
         trackStyle: {
-            type: [String, Array],
+            type: [String, Object, Array],
             value: '',
+            observer(newVal) {
+                this.setData({
+                    extTrackStyle: Array.isArray(newVal) ? newVal.map((n) => styleToCssString(n)) : styleToCssString(newVal),
+                })
+            },
         },
         railStyle: {
-            type: String,
+            type: [String, Object],
             value: '',
+            observer(newVal) {
+                this.setData({
+                    extRailStyle: styleToCssString(newVal),
+                })
+            },
         },
         wrapStyle: {
-            type: String,
+            type: [String, Object],
             value: '',
+            observer(newVal) {
+                this.setData({
+                    extWrapStyle: styleToCssString(newVal),
+                })
+            },
         },
     },
     data: {
         offsets: [],
         sliderValue: [],
+        extMarkStyle: '',
+        extHandleStyle: '',
+        extTrackStyle: '',
+        extRailStyle: '',
+        extWrapStyle: '',
+    },
+    computed: {
+        classes() {
+            const { prefixCls, disabled } = this.data
+            const wrap = classNames(prefixCls, {
+                [`${prefixCls}--disabled`]: disabled,
+            })
+            const min = `${prefixCls}__min`
+            const rail = `${prefixCls}__rail`
+            const mark = `${prefixCls}__mark`
+            const track = `${prefixCls}__track`
+            const handle = `${prefixCls}__handle`
+            const max = `${prefixCls}__max`
+
+            return {
+                wrap,
+                min,
+                rail,
+                mark,
+                track,
+                handle,
+                max,
+            }
+        },
     },
     methods: {
         /**
@@ -117,10 +177,12 @@ Component({
         onTouchMove(e) {
             if (this.data.disabled || getPointsNumber(e) > 1) return
             const { index } = e.currentTarget.dataset
+            const { prefixCls } = this.data
+
             this.isMoved = true
             this.moveX = getTouchPoints(e).x
 
-            this.getRect('.wux-slider__rail').then((rect) => {
+            this.getRect(`.${prefixCls}__rail`).then((rect) => {
                 if (!rect || !this.isMoved) return
 
                 const diffX = (this.moveX - this.startX) / rect.width * (this.data.max - this.data.min)
@@ -147,7 +209,7 @@ Component({
                 // 判断当前值是否发生变化，是则触发 change 事件
                 if (sliderValue[index] !== currentValue) {
                     const value = this.getValue(nextOffsets)
-                    
+
                     if (!this.data.controlled) {
                         this.setData({ offsets: nextOffsets, sliderValue: value })
                     }
@@ -248,7 +310,7 @@ Component({
     attached() {
         const { defaultValue, value, controlled } = this.data
         const sliderValue = controlled ? value : defaultValue
-        
+
         this.updated(sliderValue)
         this.getMarks()
     },

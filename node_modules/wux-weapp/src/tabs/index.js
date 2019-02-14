@@ -1,3 +1,6 @@
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+
 const getDefaultActiveKey = (elements) => {
     const target = elements.filter((element) => !element.data.disabled)[0]
     if (target) {
@@ -15,23 +18,20 @@ const getActiveKey = (elements, activeKey) => {
     return !activeKey ? defaultActiveKey : !activeKeyIsValid(elements, activeKey) ? defaultActiveKey : activeKey
 }
 
-Component({
-    externalClasses: ['wux-class'],
+baseComponent({
     relations: {
         '../tab/index': {
             type: 'child',
-            linked() {
-                this.changeCurrent()
-            },
-            linkChanged() {
-                this.changeCurrent()
-            },
-            unlinked() {
-                this.changeCurrent()
+            observer() {
+                this.debounce(this.changeCurrent)
             },
         },
     },
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-tabs',
+        },
         defaultCurrent: {
             type: String,
             value: '',
@@ -53,15 +53,33 @@ Component({
             type: String,
             value: 'balanced',
         },
+        direction: {
+            type: String,
+            value: 'horizontal',
+        },
     },
     data: {
         activeKey: '',
         keys: [],
     },
+    computed: {
+        classes() {
+            const { prefixCls, direction, scroll } = this.data
+            const wrap = classNames(prefixCls, {
+                [`${prefixCls}--${direction}`]: direction,
+                [`${prefixCls}--scroll`]: scroll,
+            })
+
+            return {
+                wrap,
+            }
+        },
+    },
     methods: {
         updated(value, condition) {
             const elements = this.getRelationNodes('../tab/index')
             const activeKey = getActiveKey(elements, value)
+            const { scroll, theme, direction } = this.data
 
             if (elements.length > 0) {
                 if (condition) {
@@ -70,7 +88,12 @@ Component({
                     })
 
                     elements.forEach((element) => {
-                        element.changeCurrent(element.data.key === activeKey, this.data.scroll, this.data.theme)
+                        element.changeCurrent({
+                            current: element.data.key === activeKey,
+                            scroll,
+                            theme,
+                            direction,
+                        })
                     })
                 }
             }

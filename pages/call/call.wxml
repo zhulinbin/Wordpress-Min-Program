@@ -1,0 +1,9 @@
+<wux-popup visible="{{isVisible}}" bindclosed="onClosed">
+  <wux-cell-group title="如何撩(相约健身房)">
+    <wux-cell hover-class="none" title="在线撩">
+      <wux-button block open-type="contact"></wux-button>            
+    </wux-cell>
+    <wux-cell hover-class="none" title="加微信" bindtap="doAddWeChat"></wux-cell>
+  </wux-cell-group>
+  <wux-button block type="balanced" bindtap="doClose">下次再来</wux-button>
+</wux-popup>

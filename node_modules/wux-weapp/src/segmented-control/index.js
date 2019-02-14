@@ -1,6 +1,12 @@
-Component({
-	externalClasses: ['wux-class'],
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+
+baseComponent({
 	properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-segment',
+        },
         theme: {
             type: String,
             value: 'balanced',
@@ -36,12 +42,24 @@ Component({
     data: {
         activeKey: 0,
     },
+    computed: {
+        classes() {
+            const { prefixCls, theme, disabled } = this.data
+            const wrap = classNames(prefixCls, {
+                [`${prefixCls}--${theme}`]: theme,
+                [`${prefixCls}--disabled`]: disabled,
+            })
+            const item = `${prefixCls}__item`
+
+            return {
+                wrap,
+                item,
+            }
+        },
+    },
     methods: {
     	onTap(e) {
-    		if (this.data.disabled) {
-    			return false
-    		}
-
+    		if (this.data.disabled) return
     		this.setActiveKey(e.currentTarget.dataset.index)
     	},
     	emitEvent(key) {

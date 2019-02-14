@@ -1,6 +1,12 @@
-Component({
-    externalClasses: ['wux-class'],
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+
+baseComponent({
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-rater',
+        },
         max: {
             type: Number,
             value: 5,
@@ -65,6 +71,28 @@ Component({
     data: {
         raterValue: 0,
     },
+    computed: {
+        classes() {
+            const { prefixCls, disabled } = this.data
+            const wrap = classNames(prefixCls, {
+                [`${prefixCls}--disabled`]: disabled,
+            })
+            const star = `${prefixCls}__star`
+            const box = `${prefixCls}__box`
+            const inner = `${prefixCls}__inner`
+            const outer = `${prefixCls}__outer`
+            const icon = `${prefixCls}__icon`
+
+            return {
+                wrap,
+                star,
+                box,
+                inner,
+                outer,
+                icon,
+            }
+        },
+    },
     methods: {
         updateValue(value = this.data.raterValue) {
             const { max, activeColor } = this.data
@@ -83,11 +111,10 @@ Component({
             })
         },
         updateHalfStarValue(index, x, cb) {
+            const { prefixCls } = this.data
             const query = wx.createSelectorQuery().in(this)
-            query.selectAll('.wux-rater__star').boundingClientRect((rects) => {
-                if (rects.filter((n) => !n).length) {
-                    return false
-                }
+            query.selectAll(`.${prefixCls}__star`).boundingClientRect((rects) => {
+                if (rects.filter((n) => !n).length) return
                 const { left, width } = rects[index]
                 const has = (x - left) < width / 2
                 const value = has ? index + .5 : index + 1
@@ -126,11 +153,10 @@ Component({
             const { disabled, allowHalf, allowTouchMove } = this.data
             if (!disabled && allowTouchMove) {
                 const x = e.changedTouches[0].pageX
+                const { prefixCls } = this.data
                 const query = wx.createSelectorQuery().in(this)
-                query.selectAll('.wux-rater__star').boundingClientRect((rects) => {
-                    if (rects.filter((n) => !n).length) {
-                        return false
-                    }
+                query.selectAll(`.${prefixCls}__star`).boundingClientRect((rects) => {
+                    if (rects.filter((n) => !n).length) return
                     const { left, width } = rects[0]
                     const maxWidth = rects.map((n) => n.width).reduce((a, b) => a + b)
                     const diff = x - left

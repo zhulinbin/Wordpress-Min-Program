@@ -11,6 +11,18 @@ let wpApi = `${server}/wp-json/wp/v2`
 let customApi = `${server}/wp-json/watch-life-net/v1`
 
 export let apiConfig = {
+  image: {
+    common: {
+      loadingIcon: '../../assets/img/loading.svg'
+    },
+    index: {
+      authorizeHead: '../../assets/img/authorizeHead.png',
+      releaseVideoBtn: '../../assets/img/releaseVideoBtn.png'
+    },
+    releaseVideo: {
+      headerImg: '../../assets/img/releaseVideoHeader.png'
+    }
+  },
 	server: {
 		posts: `${wpApi}/posts`, // 文章相关内容
 		categories: `${wpApi}/categories`, // 分类列表

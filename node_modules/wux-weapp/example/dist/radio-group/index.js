@@ -1,21 +1,25 @@
-Component({
-    externalClasses: ['wux-class'],
-    behaviors: ['wx://form-field'],
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+
+baseComponent({
+    useField: true,
     relations: {
         '../radio/index': {
             type: 'child',
-            linked() {
-                this.changeValue()
-            },
-            linkChanged() {
-                this.changeValue()
-            },
-            unlinked() {
-                this.changeValue()
+            observer() {
+                this.debounce(this.changeValue)
             },
         },
     },
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-radio-group',
+        },
+        cellGroupPrefixCls: {
+            type: String,
+            value: 'wux-cell-group',
+        },
         value: {
             type: String,
             value: '',

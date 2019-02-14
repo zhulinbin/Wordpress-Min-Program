@@ -1,20 +1,21 @@
-Component({
-    externalClasses: ['wux-class'],
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+import { safeAreaInset, checkIPhoneX } from '../helpers/checkIPhoneX'
+
+baseComponent({
     relations: {
         '../tabbar-item/index': {
             type: 'child',
-            linked() {
-                this.changeCurrent()
-            },
-            linkChanged() {
-                this.changeCurrent()
-            },
-            unlinked() {
-                this.changeCurrent()
+            observer() {
+                this.debounce(this.changeCurrent)
             },
         },
     },
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-tabbar',
+        },
         defaultCurrent: {
             type: String,
             value: '',
@@ -36,10 +37,27 @@ Component({
             type: String,
             value: '',
         },
+        safeArea: {
+            type: Boolean,
+            value: false,
+        },
     },
     data: {
+        tabbarStyle: '',
         activeKey: '',
         keys: [],
+    },
+    computed: {
+        classes() {
+            const { prefixCls, position } = this.data
+            const wrap = classNames(prefixCls, {
+                [`${prefixCls}--${position}`]: position,
+            })
+
+            return {
+                wrap,
+            }
+        },
     },
     methods: {
         updated(activeKey, condition) {
@@ -82,11 +100,19 @@ Component({
 
             this.emitEvent(activeKey)
         },
+        applyIPhoneXShim(position = this.data.position) {
+            if (checkIPhoneX()) {
+                if (position === 'bottom' || position === 'top') {
+                    this.setData({ tabbarStyle: `${position}: ${safeAreaInset[position]}px` })
+                }
+            }
+        },
     },
     ready() {
         const { defaultCurrent, current, controlled } = this.data
         const activeKey = controlled ? current : defaultCurrent
 
         this.updated(activeKey, true)
+        this.applyIPhoneXShim()
     },
 })

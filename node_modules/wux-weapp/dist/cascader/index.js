@@ -1,3 +1,5 @@
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
 import arrayTreeFilter from '../helpers/arrayTreeFilter'
 
 const WUX_CASCADER = 'wux-cascader'
@@ -7,9 +9,13 @@ const defaultFieldNames = {
     children: 'children',
 }
 
-Component({
-    externalClasses: ['wux-class', 'wux-scroll-view-class'],
+baseComponent({
+    externalClasses: ['wux-scroll-view-class'],
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-cascader',
+        },
         defaultValue: {
             type: Array,
             value: [],
@@ -34,6 +40,7 @@ Component({
         options: {
             type: Array,
             value: [],
+            observer: 'getCurrentOptions',
         },
         chooseTitle: {
             type: String,
@@ -55,6 +62,38 @@ Component({
         activeValue: [],
         showOptions: [],
         fieldNames: {},
+    },
+    computed: {
+        classes() {
+            const { prefixCls } = this.data
+            const wrap = classNames(prefixCls)
+            const hd = `${prefixCls}__hd`
+            const title = `${prefixCls}__title`
+            const menus = `${prefixCls}__menus`
+            const menu = `${prefixCls}__menu`
+            const bd = `${prefixCls}__bd`
+            const inner = `${prefixCls}__inner`
+            const scrollView = `${prefixCls}__scroll-view`
+            const option = `${prefixCls}__option`
+            const item = `${prefixCls}__item`
+            const icon = `${prefixCls}__icon`
+            const ft = `${prefixCls}__ft`
+
+            return {
+                wrap,
+                hd,
+                title,
+                menus,
+                menu,
+                bd,
+                inner,
+                scrollView,
+                option,
+                item,
+                icon,
+                ft,
+            }
+        },
     },
     methods: {
         getActiveOptions(activeValue) {
@@ -79,7 +118,10 @@ Component({
                 const value = this.getFieldName('value')
                 const label = this.getFieldName('label')
 
-                activeOptions.push({ [value]: WUX_CASCADER, [label]: chooseTitle })
+                activeOptions.push({
+                    [value]: WUX_CASCADER,
+                    [label]: chooseTitle
+                })
             }
 
             return activeOptions
@@ -123,7 +165,11 @@ Component({
                 callback.call(this, currentOptions, activeOptions, !hasChildren)
             }
         },
-        getCurrentOptions(activeValue) {
+        /**
+         * 更新级联数据
+         * @param {Array} activeValue 当前选中值
+         */
+        getCurrentOptions(activeValue = this.data.activeValue) {
             const optionIndex = Math.max(0, activeValue.length - 1)
             const activeOptions = this.getActiveOptions(activeValue)
             const currentOptions = activeOptions[optionIndex]
@@ -134,7 +180,10 @@ Component({
                 const value = this.getFieldName('value')
                 const label = this.getFieldName('label')
 
-                activeOptions.push({ [value]: WUX_CASCADER, [label]: this.data.chooseTitle })
+                activeOptions.push({
+                    [value]: WUX_CASCADER,
+                    [label]: this.data.chooseTitle
+                })
 
                 const showOptions = this.getShowOptions(activeValue)
                 const activeIndex = activeOptions.length - 1

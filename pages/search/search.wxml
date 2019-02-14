@@ -1,0 +1,16 @@
+<import src="../../templates/footer/footer.wxml"/>
+
+<wux-search-bar 
+  value="{{searchValue}}"
+  focus
+  clear
+  maxlength="{{50}}"
+  controlled="{{true}}"
+  placeholder="搜索你感兴趣的内容..."
+  bindchange="doChange" 
+  bindconfirm="doSearchBarConfirm"
+  bindcancel="doCancel"
+  bindclear="doClear" />
+<article-list-component articleList="{{articleList}}" isLoadingArticle="{{isLoadingArticle}}" bindgoDetailPage="onGoDetailPage"></article-list-component>
+
+<template is="footer--template"></template>

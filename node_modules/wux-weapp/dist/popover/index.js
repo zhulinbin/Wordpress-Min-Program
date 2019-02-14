@@ -1,3 +1,7 @@
+import baseComponent from '../helpers/baseComponent'
+import classNames from '../helpers/classNames'
+import styleToCssString from '../helpers/styleToCssString'
+
 const getPlacements = ([a, s, b] = rects, placement = 'top') => {
     switch (placement) {
         case 'topLeft':
@@ -68,12 +72,16 @@ const getPlacements = ([a, s, b] = rects, placement = 'top') => {
     }
 }
 
-Component({
-    externalClasses: ['wux-class'],
-    options: {
-        multipleSlots: true,
-    },
+baseComponent({
     properties: {
+        prefixCls: {
+            type: String,
+            value: 'wux-popover',
+        },
+        classNames: {
+            type: null,
+            value: 'wux-animate--fadeIn',
+        },
         theme: {
             type: String,
             value: 'light',
@@ -95,14 +103,11 @@ Component({
             value: 'click',
         },
         bodyStyle: {
-            type: String,
+            type: [String, Object],
             value: '',
             observer(newVal) {
-                const bodyStyle = newVal.trim()
-                const popoverBodyStyle = bodyStyle ? bodyStyle.split(';').filter((n) => !!n) : []
-
                 this.setData({
-                    popoverBodyStyle: popoverBodyStyle.join(';'),
+                    extStyle: styleToCssString(newVal),
                 })
             },
         },
@@ -127,30 +132,49 @@ Component({
         },
     },
     data: {
+        extStyle: '',
         popoverStyle: '',
-        popoverBodyStyle: '',
         popoverVisible: false,
+    },
+    computed: {
+        classes() {
+            const { prefixCls, theme, placement } = this.data
+            const wrap = classNames(prefixCls, {
+                [`${prefixCls}--theme-${theme}`]: theme,
+                [`${prefixCls}--placement-${placement}`]: placement,
+            })
+            const content = `${prefixCls}__content`
+            const arrow = `${prefixCls}__arrow`
+            const inner = `${prefixCls}__inner`
+            const title = `${prefixCls}__title`
+            const innerContent = `${prefixCls}__inner-content`
+            const element = `${prefixCls}__element`
+
+            return {
+                wrap,
+                content,
+                arrow,
+                inner,
+                title,
+                innerContent,
+                element,
+            }
+        },
     },
     methods: {
         getPopoverStyle() {
+            const { prefixCls } = this.data
             const query = wx.createSelectorQuery().in(this)
-            query.select('.wux-popover__element').boundingClientRect()
+            query.select(`.${prefixCls}__element`).boundingClientRect()
             query.selectViewport().scrollOffset()
-            query.select('.wux-popover').boundingClientRect()
+            query.select(`.${prefixCls}`).boundingClientRect()
             query.exec((rects) => {
-                if (rects.filter((n) => !n).length) {
-                    return false
-                }
+                if (rects.filter((n) => !n).length) return
 
-                const popoverStyle = this.data.popoverBodyStyle ? this.data.popoverBodyStyle.split(';') : []
                 const placements = getPlacements(rects, this.data.placement)
 
-                for (const key in placements) {
-                    popoverStyle.push(`${key}: ${placements[key]}px`)
-                }
-
                 this.setData({
-                    popoverStyle: popoverStyle.join(';'),
+                    popoverStyle: styleToCssString(placements),
                 })
             })
         },
@@ -179,12 +203,11 @@ Component({
         },
     },
     attached() {
-        const { popoverBodyStyle, defaultVisible, visible, controlled } = this.data
+        const { defaultVisible, visible, controlled } = this.data
         const popoverVisible = controlled ? visible : defaultVisible
 
         this.setData({
             popoverVisible,
-            popoverStyle: popoverBodyStyle,
         })
     },
 })
