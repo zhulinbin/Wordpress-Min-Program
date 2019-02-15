@@ -3,10 +3,10 @@ Page({
     isVisible: true
   },
   onLoad: function() {
-    wx.showLoading()
+    wx.showNavigationBarLoading()
   },
   onReady: function() {
-    wx.hideLoading()
+    wx.hideNavigationBarLoading()
   },
   onShow: function() {
     if (!this.data.isVisible) {
@@ -16,13 +16,13 @@ Page({
     }
   },
   onClosed: function() {
-    wx.hideLoading()
+    wx.hideNavigationBarLoading()
     wx.switchTab({
       url: '../index/index'
     })
   },
   doClose: function() {
-    wx.showLoading()
+    wx.showNavigationBarLoading()
     this.setData({
       isVisible: false
     })

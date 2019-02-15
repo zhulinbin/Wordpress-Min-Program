@@ -20,8 +20,8 @@
 
 .article_box .item .empty {
 	text-align: center;
-  background-color: #cccccc;
-  color: aliceblue;
+  background: rgba(0, 30, 87, 0.04);
+  color: rgba(0, 30, 87, 0.1);
 	height: 100%;
   width: 100%;
   line-height: 200rpx;
@@ -35,8 +35,9 @@
   position: absolute;
   width: 100%;
   color: #ffffff;
-  background: rgba(204, 204, 204, 0.5);
   z-index: 22222;
+  background: rgba(0, 30, 87, 0.04);
+  box-shadow: 0 3px 6px 0 rgba(0, 30, 87, 0.08);
 }
 
 .article_box .item .text_box > text {

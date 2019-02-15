@@ -10,12 +10,14 @@ Page({
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
     excludeId: {
       article: 97,
-      category: 27
+      category: [1, 27]
     },
     swipeImgList: [],
     articleList: [],
     currentTab: -1,
     isLoadingArticle: true,
+    isShowNoMore: false,
+    isDisabledBottomRefresh: false,
     tabList: [
       {
         key: '-1',
@@ -23,9 +25,8 @@ Page({
       }
     ],
     pageObj: {
-      count: 20,
-      number: 1,
-      isLast: false
+      count: 10,
+      number: 1
     },
     iconSets: {
       authorizeHead: apiConfig.image.index.authorizeHead
@@ -101,14 +102,13 @@ Page({
     })
   },
   onReachBottom: function() {
-    if (!this.data.pageObj.isLast) {
+    if (!this.data.isDisabledBottomRefresh) {
       this.getArticleList()
     }
   },
   onPullDownRefresh: function() {
     this.setData({
       'pageObj.number': 1,
-      'pageObj.isLast': false,
       articleList: []
     })
     this.getArticleList()
@@ -117,7 +117,6 @@ Page({
     this.setData({
       currentTab: ev.detail.key,
       'pageObj.number': 1,
-      'pageObj.isLast': false,
       articleList: []
     })
     this.getArticleList()
@@ -148,7 +147,7 @@ Page({
   },
   onGoDetailPage: function(ev) {
     wx.navigateTo({
-      url: '../detail/detail?id=' + ev.detail
+      url: '../detail/detail?url=' + ev.detail
     })
   },
   doSearchBarConfirm: function(ev) {
@@ -158,7 +157,9 @@ Page({
   },
   getArticleList: function() {
     this.setData({
-      isLoadingArticle: true
+      isShowNoMore: false,
+      isLoadingArticle: true,
+      isDisabledBottomRefresh: true
     })
     let params = `?per_page=${this.data.pageObj.count}&orderby=date&order=desc&page=${this.data.pageObj.number}&exclude=${this.data.excludeId.article}`
     if (parseInt(this.data.currentTab) !== -1) {
@@ -170,10 +171,13 @@ Page({
         articleList: this.data.articleList.concat(res),
         'pageObj.number': ++this.data.pageObj.number
       })
-
       if (res.length < this.data.pageObj.count) {
         this.setData({
-          'pageObj.isLast': true
+          isShowNoMore: true
+        })
+      } else {
+        this.setData({
+          isDisabledBottomRefresh: false
         })
       }
       wx.stopPullDownRefresh()

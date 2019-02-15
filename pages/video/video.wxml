@@ -2,9 +2,9 @@
 
 <movable-area class="video_wrapper">
   <movable-view bindtap="goReleasePage" direction="all" x="{{releaseBtnObj.x}}" y="{{releaseBtnObj.y}}">
-    <image src="{{releaseVideoBtn}}" mode='widthFix'></image>
+    <image src="{{iconSets.releaseVideoBtn}}" mode='widthFix'></image>
   </movable-view>
-  <block wx:if="{{!isLoadingVideo}}">
+  <block>
     <block wx:if="{{videoList.length > 0}}">
       <view class="item_box" wx:for="{{videoList}}" wx:key="{{index}}">
         <video
@@ -14,20 +14,21 @@
         <view>
           <view class="title">{{item.title.rendered}}</view>
           <view class="content">
-            <image src="{{item.caption[1]}}" mode='widthFix'></image>
+            <image wx:if="{{item.caption[1] !== ''}}" src="{{item.caption[1]}}" mode='widthFix'></image>
+            <image wx:else src="{{iconSets.userHeadIcon}}"></image>
             <text>{{item.caption[0]}}</text>
           </view>
         </view>
       </view>
     </block>
-    <view wx:else> <wux-divider text="暂无数据" /></view>
   </block>
-  <block wx:else>
-    <view class='item_box skeleton' wx:for="{{4}}" wx:key="index">
-      <wux-skeleton>
+  <block wx:if="{{isLoadingVideo}}">
+    <view class='item_box skeleton' wx:for="{{10}}" wx:key="index">
+      <wux-skeleton active>
         <wux-skeleton-paragraph rows="3" />
       </wux-skeleton>
     </view>
   </block>
+  <view wx:if="{{isShowNoMore}}"> <wux-divider text="暂无更多数据" /></view>
   <template is="footer--template"></template>
 </movable-area>

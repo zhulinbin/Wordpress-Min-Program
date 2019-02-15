@@ -5,14 +5,14 @@ let fly = new Fly
 fly.interceptors.request.use((request) => {
   /* 给所有请求添加自定义header */
   // request.headers['xxx'] = 'xxx'
-  wx.showLoading()
+  wx.showNavigationBarLoading()
   return request
 })
  
 /* 添加响应拦截器，响应拦截器会在then/catch处理之前执行 */
 fly.interceptors.response.use(
   (response) => {
-    wx.hideLoading()
+    wx.hideNavigationBarLoading()
     // 目前还不清楚所有的返回响应字段code所以暂时先不做错误提示
     // if (response.code !== 2000) {
     //   wx.showToast({
@@ -23,7 +23,7 @@ fly.interceptors.response.use(
     return response.data
   },
   (err) => {
-    wx.hideLoading()
+    wx.hideNavigationBarLoading()
     //发生网络错误后会走到这里
     return Promise.resolve(err)
   }

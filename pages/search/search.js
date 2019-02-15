@@ -9,10 +9,11 @@ Page({
     articleList: [],
     isLoadingArticle: true,
     isResetSubmitValue: false,
+    isShowNoMore: false,
+    isDisabledBottomRefresh: false,
     pageObj: {
-      count: 20,
-      number: 1,
-      isLast: false
+      count: 10,
+      number: 1
     }
   },
   onLoad: function(options) {
@@ -37,13 +38,12 @@ Page({
   resetSubmitValue: function(value = '') {
     this.setData({
       'pageObj.number': 1,
-      'pageObj.isLast': false,
       searchValue: value,
       isResetSubmitValue: true
     })
   },
   onReachBottom: function() {
-    if (!this.data.pageObj.isLast) {
+    if (!this.data.isDisabledBottomRefresh) {
       this.getArticleList()
     }
   },
@@ -53,12 +53,14 @@ Page({
   },
   onGoDetailPage: function(ev) {
     wx.navigateTo({
-      url: '../detail/detail?id=' + ev.detail
+      url: '../detail/detail?url=' + ev.detail
     })
   },
   getArticleList: function() {
     this.setData({
-      isLoadingArticle: true
+      isShowNoMore: false,
+      isLoadingArticle: true,
+      isDisabledBottomRefresh: true
     })
     let params = `?per_page=${this.data.pageObj.count}&orderby=date&order=desc&page=${this.data.pageObj.number}&search=${this.data.searchValue}`
 
@@ -71,10 +73,13 @@ Page({
         'pageObj.number': ++this.data.pageObj.number,
         isResetSubmitValue: false
       })
-
       if (res.length < this.data.pageObj.count) {
         this.setData({
-          'pageObj.isLast': true
+          isShowNoMore: true
+        })
+      } else {
+        this.setData({
+          isDisabledBottomRefresh: false
         })
       }
       wx.stopPullDownRefresh()

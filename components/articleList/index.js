@@ -4,6 +4,10 @@ import {
 
 Component({
   properties: {
+    isShowNoMore: {
+      type: Boolean,
+      value: false
+    },
     isLoadingArticle: {
       type: Boolean,
       value: true,
@@ -21,7 +25,7 @@ Component({
   },
   methods: {
     goDetailPage(ev) {
-      this.triggerEvent('goDetailPage', ev.currentTarget.dataset.id)
+      this.triggerEvent('goDetailPage', ev.currentTarget.dataset.link)
     }
   }
 })

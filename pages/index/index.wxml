@@ -31,6 +31,6 @@
   </swiper>
   <wux-search-bar maxlength="{{50}}" controlled placeholder="搜索你感兴趣的内容..." bindconfirm="doSearchBarConfirm" />
 </view>
-<article-list-component articleList="{{articleList}}" isLoadingArticle="{{isLoadingArticle}}" bindgoDetailPage="onGoDetailPage"></article-list-component>
+<article-list-component isShowNoMore="{{isShowNoMore}}" articleList="{{articleList}}" isLoadingArticle="{{isLoadingArticle}}" bindgoDetailPage="onGoDetailPage"></article-list-component>
 
 <template is="footer--template"></template>

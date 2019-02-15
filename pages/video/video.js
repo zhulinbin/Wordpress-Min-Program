@@ -6,16 +6,20 @@ import { apiConfig } from '../../configs/api'
 Page({
   data: {
     videoList: [],
-    releaseVideoBtn: apiConfig.image.index.releaseVideoBtn,
+    iconSets: {
+      releaseVideoBtn: apiConfig.image.video.releaseVideoBtn,
+      userHeadIcon: apiConfig.image.common.userHeadIcon
+    },
     releaseBtnObj: {
       x: 0,
       y: 0
     },
     isLoadingVideo: true,
+    isShowNoMore: false,
+    isDisabledBottomRefresh: false,
     pageObj: {
-      count: 8,
-      number: 1,
-      isLast: false
+      count: 10,
+      number: 1
     }
   },
   onLoad: function() {
@@ -32,21 +36,22 @@ Page({
     })
   },
   onReachBottom: function() {
-    if (!this.data.pageObj.isLast) {
+    if (!this.data.isDisabledBottomRefresh) {
       this.getMedia()
     }
   },
   onPullDownRefresh: function() {
     this.setData({
       'pageObj.number': 1,
-      'pageObj.isLast': false,
       videoList: []
     })
     this.getMedia()
   },
   getMedia: function() {
     this.setData({
-      isLoadingVideo: true
+      isShowNoMore: false,
+      isLoadingVideo: true,
+      isDisabledBottomRefresh: true
     })
     httpService.get(apiConfig.server.media + `?per_page=${this.data.pageObj.count}&order=desc&orderby=date&page=${this.data.pageObj.number}&media_type=video`).then((res) => {
       res.forEach(item => {
@@ -58,10 +63,13 @@ Page({
         videoList: this.data.videoList.concat(res),
         'pageObj.number': ++this.data.pageObj.number
       })
-
       if (res.length < this.data.pageObj.count) {
         this.setData({
-          'pageObj.isLast': true
+          isShowNoMore: true
+        })
+      } else {
+        this.setData({
+          isDisabledBottomRefresh: false
         })
       }
       wx.stopPullDownRefresh()

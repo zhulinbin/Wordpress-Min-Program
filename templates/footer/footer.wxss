@@ -2,7 +2,7 @@
   color: #cccccc;
   font-size: 24rpx;
   text-align: center;
-  padding: 30rpx 0;
+  padding: 15rpx 0 30rpx 0;
 }
 
 .footer_box > image {

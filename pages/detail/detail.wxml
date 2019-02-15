@@ -1,6 +1,9 @@
-<import src="../../static/lib/wxParse/wxParse.wxml" />
+<!-- <import src="../../static/lib/wxParse/wxParse.wxml" />
 
 <view class="detail_box">
   <template wx:if="{{content !== ''}}" is="wxParse" data="{{wxParseData:articleDetail.nodes}}" />
   <view wx:else> <wux-divider text="暂无数据" /></view>
 </view>
+-->
+
+<web-view src="{{url}}" bindload='doLoadOver' binderror="doLoadError"></web-view>

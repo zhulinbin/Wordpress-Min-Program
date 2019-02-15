@@ -13,10 +13,13 @@ let customApi = `${server}/wp-json/watch-life-net/v1`
 export let apiConfig = {
   image: {
     common: {
-      loadingIcon: '../../assets/img/loading.svg'
+      loadingIcon: '../../assets/img/loading.jpg',
+      userHeadIcon: '../../assets/img/userHead.png'
     },
     index: {
-      authorizeHead: '../../assets/img/authorizeHead.png',
+      authorizeHead: '../../assets/img/authorizeHead.png'
+    },
+    video: {
       releaseVideoBtn: '../../assets/img/releaseVideoBtn.png'
     },
     releaseVideo: {
