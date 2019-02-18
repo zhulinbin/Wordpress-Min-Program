@@ -18,6 +18,7 @@ Page({
     isLoadingArticle: true,
     isShowNoMore: false,
     isDisabledBottomRefresh: false,
+    skeletonRow: 8,
     tabList: [
       {
         key: '-1',
@@ -25,7 +26,7 @@ Page({
       }
     ],
     pageObj: {
-      count: 10,
+      count: 8,
       number: 1
     },
     iconSets: {
@@ -103,15 +104,18 @@ Page({
   },
   onReachBottom: function() {
     if (!this.data.isDisabledBottomRefresh) {
-      this.getArticleList()
+      this.getArticleList({
+        skeletonRow: 2
+      })
     }
   },
   onPullDownRefresh: function() {
     this.setData({
-      'pageObj.number': 1,
-      articleList: []
+      'pageObj.number': 1
     })
-    this.getArticleList()
+    this.getArticleList({
+      isPullDown: true
+    })
   },
   onTabsChange: function(ev) {
     this.setData({
@@ -155,20 +159,27 @@ Page({
       url: '../search/search?value=' + ev.detail.value
     })
   },
-  getArticleList: function() {
+  getArticleList: function(obj = {}) {
+    let options = {
+      isPullDown: false,
+      skeletonRow: 8
+    }
+    options = Object.assign({}, options, obj)
     this.setData({
-      isShowNoMore: false,
-      isLoadingArticle: true,
-      isDisabledBottomRefresh: true
+      isShowNoMore: options.isPullDown,
+      isLoadingArticle: !options.isPullDown,
+      isDisabledBottomRefresh: true,
+      skeletonRow: options.skeletonRow
     })
     let params = `?per_page=${this.data.pageObj.count}&orderby=date&order=desc&page=${this.data.pageObj.number}&exclude=${this.data.excludeId.article}`
     if (parseInt(this.data.currentTab) !== -1) {
       params = params + `&categories=${this.data.currentTab}`
     }
     httpService.get(apiConfig.server.posts + params).then((res) => {
+      let list = options.isPullDown ? res : this.data.articleList.concat(res)
       this.setData({
         isLoadingArticle: false,
-        articleList: this.data.articleList.concat(res),
+        articleList: list,
         'pageObj.number': ++this.data.pageObj.number
       })
       if (res.length < this.data.pageObj.count) {

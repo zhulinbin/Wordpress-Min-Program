@@ -4,6 +4,10 @@ import {
 
 Component({
   properties: {
+    skeletonRow: {
+      type: Number,
+      value: 8
+    },
     isShowNoMore: {
       type: Boolean,
       value: false

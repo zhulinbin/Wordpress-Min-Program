@@ -17,7 +17,7 @@
     </block>
   </block>
   <block wx:if="{{isLoadingArticle}}">
-    <view class='item skeleton' wx:for="{{8}}" wx:key="index">
+    <view class='item skeleton' wx:for="{{skeletonRow}}" wx:key="index">
       <wux-skeleton active>
         <wux-skeleton-paragraph rows="1" />
       </wux-skeleton>

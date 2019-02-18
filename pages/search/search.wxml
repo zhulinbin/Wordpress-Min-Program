@@ -11,6 +11,6 @@
   bindconfirm="doSearchBarConfirm"
   bindcancel="doCancel"
   bindclear="doClear" />
-<article-list-component articleList="{{articleList}}" isLoadingArticle="{{isLoadingArticle}}" bindgoDetailPage="onGoDetailPage"></article-list-component>
+<article-list-component skeletonRow="{{skeletonRow}}" isShowNoMore="{{isShowNoMore}}" articleList="{{articleList}}" isLoadingArticle="{{isLoadingArticle}}" bindgoDetailPage="onGoDetailPage"></article-list-component>
 
 <template is="footer--template"></template>

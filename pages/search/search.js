@@ -10,9 +10,10 @@ Page({
     isLoadingArticle: true,
     isResetSubmitValue: false,
     isShowNoMore: false,
+    skeletonRow: 8,
     isDisabledBottomRefresh: false,
     pageObj: {
-      count: 10,
+      count: 8,
       number: 1
     }
   },
@@ -44,23 +45,33 @@ Page({
   },
   onReachBottom: function() {
     if (!this.data.isDisabledBottomRefresh) {
-      this.getArticleList()
+      this.getArticleList({
+        skeletonRow: 2
+      })
     }
   },
   onPullDownRefresh: function() {
     this.resetSubmitValue(this.data.searchValue)
-    this.getArticleList()
+    this.getArticleList({
+      isPullDown: true
+    })
   },
   onGoDetailPage: function(ev) {
     wx.navigateTo({
       url: '../detail/detail?url=' + ev.detail
     })
   },
-  getArticleList: function() {
+  getArticleList: function(obj = {}) {
+    let options = {
+      isPullDown: false,
+      skeletonRow: 8
+    }
+    options = Object.assign({}, options, obj)
     this.setData({
-      isShowNoMore: false,
-      isLoadingArticle: true,
-      isDisabledBottomRefresh: true
+      isShowNoMore: options.isPullDown,
+      isLoadingArticle: !options.isPullDown,
+      isDisabledBottomRefresh: true,
+      skeletonRow: options.skeletonRow
     })
     let params = `?per_page=${this.data.pageObj.count}&orderby=date&order=desc&page=${this.data.pageObj.number}&search=${this.data.searchValue}`
 

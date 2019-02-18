@@ -16,6 +16,7 @@ Page({
     },
     isLoadingVideo: true,
     isShowNoMore: false,
+    skeletonRow: 8,
     isDisabledBottomRefresh: false,
     pageObj: {
       count: 10,
@@ -37,30 +38,39 @@ Page({
   },
   onReachBottom: function() {
     if (!this.data.isDisabledBottomRefresh) {
-      this.getMedia()
+      this.getMedia({
+        skeletonRow: 2
+      })
     }
   },
   onPullDownRefresh: function() {
     this.setData({
-      'pageObj.number': 1,
-      videoList: []
+      'pageObj.number': 1
     })
-    this.getMedia()
+    this.getMedia({
+      isPullDown: true
+    })
   },
-  getMedia: function() {
+  getMedia: function(obj = {}) {
+    let options = {
+      isPullDown: false,
+      skeletonRow: 8
+    }
+    options = Object.assign({}, options, obj)
     this.setData({
-      isShowNoMore: false,
-      isLoadingVideo: true,
-      isDisabledBottomRefresh: true
+      isShowNoMore: options.isPullDown,
+      isLoadingArticle: !options.isPullDown,
+      isDisabledBottomRefresh: true,
+      skeletonRow: options.skeletonRow
     })
     httpService.get(apiConfig.server.media + `?per_page=${this.data.pageObj.count}&order=desc&orderby=date&page=${this.data.pageObj.number}&media_type=video`).then((res) => {
       res.forEach(item => {
         item.caption = item.caption.rendered.replace(/<[^<>]+?>/g, '').split(',')
       })
-
+      let list = options.isPullDown ? res : this.data.videoList.concat(res)
       this.setData({
         isLoadingVideo: false,
-        videoList: this.data.videoList.concat(res),
+        videoList: list,
         'pageObj.number': ++this.data.pageObj.number
       })
       if (res.length < this.data.pageObj.count) {

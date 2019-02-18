@@ -23,7 +23,7 @@
     </block>
   </block>
   <block wx:if="{{isLoadingVideo}}">
-    <view class='item_box skeleton' wx:for="{{10}}" wx:key="index">
+    <view class='item_box skeleton' wx:for="{{skeletonRow}}" wx:key="index">
       <wux-skeleton active>
         <wux-skeleton-paragraph rows="3" />
       </wux-skeleton>
