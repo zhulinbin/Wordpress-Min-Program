@@ -41,6 +41,16 @@
   border-top: 37px solid #28a54c;
 }
 
+.swiper_box .empty {
+	text-align: center;
+  background: rgba(0, 30, 87, 0.04);
+  color: rgba(0, 30, 87, 0.1);
+	height: 100%;
+  width: 100%;
+  line-height: 150px;
+  font-size: 28rpx;
+}
+
 /* overwrite */
 .wux-tabs {
   background: #28a54c !important;

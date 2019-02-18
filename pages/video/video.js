@@ -5,6 +5,7 @@ import { apiConfig } from '../../configs/api'
 
 Page({
   data: {
+    mediaId: 167,
     videoList: [],
     iconSets: {
       releaseVideoBtn: apiConfig.image.video.releaseVideoBtn,
@@ -58,14 +59,15 @@ Page({
     }
     options = Object.assign({}, options, obj)
     this.setData({
-      isShowNoMore: options.isPullDown,
+      isShowNoMore: false,
       isLoadingArticle: !options.isPullDown,
       isDisabledBottomRefresh: true,
       skeletonRow: options.skeletonRow
     })
-    httpService.get(apiConfig.server.media + `?per_page=${this.data.pageObj.count}&order=desc&orderby=date&page=${this.data.pageObj.number}&media_type=video`).then((res) => {
+
+    httpService.get(apiConfig.server.comments + `?per_page=${this.data.pageObj.count}&order=desc&orderby=date&page=${this.data.pageObj.number}&post=${this.data.mediaId}&password=luo641361&`).then((res) => {
       res.forEach(item => {
-        item.caption = item.caption.rendered.replace(/<[^<>]+?>/g, '').split(',')
+        item.content = item.content.rendered.replace(/<[^<>]+?>/g, '').split(',')
       })
       let list = options.isPullDown ? res : this.data.videoList.concat(res)
       this.setData({

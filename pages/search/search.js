@@ -7,13 +7,16 @@ Page({
   data: {
     searchValue: '',
     articleList: [],
+    excludeId: {
+      article: [97, 167]
+    },
     isLoadingArticle: true,
     isResetSubmitValue: false,
     isShowNoMore: false,
     skeletonRow: 8,
     isDisabledBottomRefresh: false,
     pageObj: {
-      count: 8,
+      count: 10,
       number: 1
     }
   },
@@ -68,12 +71,12 @@ Page({
     }
     options = Object.assign({}, options, obj)
     this.setData({
-      isShowNoMore: options.isPullDown,
+      isShowNoMore: false,
       isLoadingArticle: !options.isPullDown,
       isDisabledBottomRefresh: true,
       skeletonRow: options.skeletonRow
     })
-    let params = `?per_page=${this.data.pageObj.count}&orderby=date&order=desc&page=${this.data.pageObj.number}&search=${this.data.searchValue}`
+    let params = `?per_page=${this.data.pageObj.count}&orderby=date&order=desc&page=${this.data.pageObj.number}&search=${this.data.searchValue}&exclude=${this.data.excludeId.article}`
 
     httpService.get(apiConfig.server.posts + params).then((res) => {
       let articleList = this.data.isResetSubmitValue ? res : this.data.articleList.concat(res)

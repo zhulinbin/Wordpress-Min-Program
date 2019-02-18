@@ -22,12 +22,24 @@
   </block>
 </wux-tabs>
 <view class="swiper_box">
-  <swiper indicator-dots="true" autoplay="true" interval="1000">
-    <block wx:for="{{swipeImgList}}" wx:key="{{index}}">
-      <swiper-item>
-        <image src="{{item.post_medium_image}}" />
-      </swiper-item>
+  <swiper indicator-dots="true" autoplay="true">
+    <block wx:if="{{!isLoadingSwipe}}">
+      <block wx:for="{{swipeImgList}}" wx:key="{{index}}">
+        <swiper-item>
+          <wux-image mode="aspectFill" lazyLoad="{{true}}" width="100%" height="100%" src="{{item.post_medium_image}}">
+            <image src="{{iconSets.loadingIcon}}" slot="loading" />
+            <view class="empty" slot="empty">暂无图片</view>
+          </wux-image>
+        </swiper-item>
+      </block>
     </block>
+    <view wx:else>
+      <swiper-item>
+        <wux-skeleton active>
+          <wux-skeleton-paragraph rows="1" />
+        </wux-skeleton>
+      </swiper-item>
+    </view>
   </swiper>
   <wux-search-bar maxlength="{{50}}" controlled placeholder="搜索你感兴趣的内容..." bindconfirm="doSearchBarConfirm" />
 </view>

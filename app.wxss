@@ -8,3 +8,8 @@ view {
   height: 200rpx;
   width: 100%;
 }
+
+.swiper_box .wux-skeleton-paragraph__row:nth-child(4n+1) {
+  height: 150px;
+  width: 100%;
+}

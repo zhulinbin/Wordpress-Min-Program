@@ -9,16 +9,17 @@ Page({
   data: {
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
     excludeId: {
-      article: 97,
+      article: [97, 167],
       category: [1, 27]
     },
     swipeImgList: [],
     articleList: [],
     currentTab: -1,
+    isLoadingSwipe: true,
     isLoadingArticle: true,
     isShowNoMore: false,
     isDisabledBottomRefresh: false,
-    skeletonRow: 8,
+    skeletonRow: 10,
     tabList: [
       {
         key: '-1',
@@ -30,6 +31,7 @@ Page({
       number: 1
     },
     iconSets: {
+      loadingIcon: apiConfig.image.common.loadingIcon,
       authorizeHead: apiConfig.image.index.authorizeHead
     },
     userInfo: {},
@@ -127,9 +129,12 @@ Page({
   },
   getSwipe: function() {
     httpService.get(apiConfig.server.swipe).then((res) => {
-      this.setData({
-        swipeImgList: res.posts
-      })
+      if (res) {
+        this.setData({
+          isLoadingSwipe: false,
+          swipeImgList: res.posts
+        })
+      }
     })
   },
   getCategories: function() {
@@ -166,7 +171,7 @@ Page({
     }
     options = Object.assign({}, options, obj)
     this.setData({
-      isShowNoMore: options.isPullDown,
+      isShowNoMore: false,
       isLoadingArticle: !options.isPullDown,
       isDisabledBottomRefresh: true,
       skeletonRow: options.skeletonRow
