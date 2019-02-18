@@ -24,6 +24,9 @@ https://developer.wordpress.org/rest-api/reference/ <br/>
 
 ![小程序截图](https://www.jwdai.com.cn/images/screenShot.png)
 
+线上小程序
+![线上小程序二维码](https://www.jwdai.com.cn/images/QRCode.png)
+
 ## 相关文章
 [从零开始搭建wordpress小程序](https://www.watch-life.net/wordpress-weixin-app)
 
