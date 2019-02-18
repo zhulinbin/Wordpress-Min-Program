@@ -24,7 +24,10 @@ fly.interceptors.response.use(
   },
   (err) => {
     wx.hideNavigationBarLoading()
-    //发生网络错误后会走到这里
+      wx.showToast({
+        title: '网络出了点小差错'
+      })
+    // 发生网络错误后会走到这里
     return Promise.resolve(err)
   }
 )

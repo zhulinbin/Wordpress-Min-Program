@@ -79,23 +79,26 @@ Page({
     let params = `?per_page=${this.data.pageObj.count}&orderby=date&order=desc&page=${this.data.pageObj.number}&search=${this.data.searchValue}&exclude=${this.data.excludeId.article}`
 
     httpService.get(apiConfig.server.posts + params).then((res) => {
-      let articleList = this.data.isResetSubmitValue ? res : this.data.articleList.concat(res)
+      if (res) {
+        let articleList = this.data.isResetSubmitValue ? res : this.data.articleList.concat(res)
 
-      this.setData({
-        isLoadingArticle: false,
-        articleList: articleList,
-        'pageObj.number': ++this.data.pageObj.number,
-        isResetSubmitValue: false
-      })
-      if (res.length < this.data.pageObj.count) {
         this.setData({
-          isShowNoMore: true
+          isLoadingArticle: false,
+          articleList: articleList,
+          'pageObj.number': ++this.data.pageObj.number,
+          isResetSubmitValue: false
         })
-      } else {
-        this.setData({
-          isDisabledBottomRefresh: false
-        })
+        if (res.length < this.data.pageObj.count) {
+          this.setData({
+            isShowNoMore: true
+          })
+        } else {
+          this.setData({
+            isDisabledBottomRefresh: false
+          })
+        }
       }
+
       wx.stopPullDownRefresh()
     })
   }

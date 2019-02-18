@@ -66,24 +66,27 @@ Page({
     })
 
     httpService.get(apiConfig.server.comments + `?per_page=${this.data.pageObj.count}&order=desc&orderby=date&page=${this.data.pageObj.number}&post=${this.data.mediaId}&password=luo641361&`).then((res) => {
-      res.forEach(item => {
-        item.content = item.content.rendered.replace(/<[^<>]+?>/g, '').split(',')
-      })
-      let list = options.isPullDown ? res : this.data.videoList.concat(res)
-      this.setData({
-        isLoadingVideo: false,
-        videoList: list,
-        'pageObj.number': ++this.data.pageObj.number
-      })
-      if (res.length < this.data.pageObj.count) {
-        this.setData({
-          isShowNoMore: true
+      if (res) {
+        res.forEach(item => {
+          item.content = item.content.rendered.replace(/<[^<>]+?>/g, '').split(',')
         })
-      } else {
+        let list = options.isPullDown ? res : this.data.videoList.concat(res)
         this.setData({
-          isDisabledBottomRefresh: false
+          isLoadingVideo: false,
+          videoList: list,
+          'pageObj.number': ++this.data.pageObj.number
         })
+        if (res.length < this.data.pageObj.count) {
+          this.setData({
+            isShowNoMore: true
+          })
+        } else {
+          this.setData({
+            isDisabledBottomRefresh: false
+          })
+        }
       }
+
       wx.stopPullDownRefresh()
     })
   },

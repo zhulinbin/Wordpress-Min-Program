@@ -101,7 +101,9 @@ Page({
       nickname: this.data.userInfo.userInfo.nickName
     }
     httpService.post(apiConfig.server.getOpenId, obj).then((res) => {
-      wx.setStorageSync('openid', res.openid)
+      if (res) {
+        wx.setStorageSync('openid', res.openid)
+      }
     })
   },
   onReachBottom: function() {
@@ -181,21 +183,25 @@ Page({
       params = params + `&categories=${this.data.currentTab}`
     }
     httpService.get(apiConfig.server.posts + params).then((res) => {
-      let list = options.isPullDown ? res : this.data.articleList.concat(res)
-      this.setData({
-        isLoadingArticle: false,
-        articleList: list,
-        'pageObj.number': ++this.data.pageObj.number
-      })
-      if (res.length < this.data.pageObj.count) {
+      // 由于wordpress的后台接口的code每个接口都未统一所以暂且用res来判断
+      if (res) {
+        let list = options.isPullDown ? res : this.data.articleList.concat(res)
         this.setData({
-          isShowNoMore: true
+          isLoadingArticle: false,
+          articleList: list,
+          'pageObj.number': ++this.data.pageObj.number
         })
-      } else {
-        this.setData({
-          isDisabledBottomRefresh: false
-        })
+        if (res.length < this.data.pageObj.count) {
+          this.setData({
+            isShowNoMore: true
+          })
+        } else {
+          this.setData({
+            isDisabledBottomRefresh: false
+          })
+        }
       }
+
       wx.stopPullDownRefresh()
     })
   }
