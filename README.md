@@ -24,7 +24,6 @@ https://developer.wordpress.org/rest-api/reference/ <br/>
 
 ![小程序截图](https://www.jwdai.com.cn/images/screenShot.png)
 
-线上小程序
 ![线上小程序二维码](https://www.jwdai.com.cn/images/QRCode.png)
 
 ## 相关文章
