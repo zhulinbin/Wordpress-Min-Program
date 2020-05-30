@@ -22,9 +22,11 @@ https://developer.wordpress.org/rest-api/reference/ <br/>
 * 查看和发布(须管理员审核)健身相关视频
 * 在线约健身
 
-![小程序截图](https://www.jwdai.com.cn/images/screenShot.png)
+![小程序截图](https://github.com/zhulinbin/Wordpress-Min-Program/blob/master/screenShot.png)
 
-![线上小程序二维码](https://www.jwdai.com.cn/images/QRCode.png)
+Tips:
+如果不能看到图片请在C:\Windows\System32\drivers\etc下的hosts文件中加入:
+151.101.184.133  raw.githubusercontent.com
 
 ## 相关文章
 [从零开始搭建wordpress小程序](https://www.watch-life.net/wordpress-weixin-app)
